@@ -3,13 +3,13 @@ title: "Lección 3 - Modos de agente: Plan y Autopilot"
 description: "Explora los modos de agente: utiliza Plan para acordar un enfoque, Autopilot para crear el filtrado a partir de una incidencia e Interactive para revisar y verificar el resultado."
 authors:
   - geektrainer
-lastUpdated: 2026-10-05
+lastUpdated: 2026-10-22
 ---
 
 Empezamos añadiendo una pequeña funcionalidad al proyecto. Sin embargo, los cambios más amplios requieren un proceso más sólido. Por suerte, la aplicación GitHub Copilot está diseñada para adaptarse al flujo existente de una organización y garantizar que creamos lo adecuado de la forma correcta. Esta es la primera de varias lecciones en las que seguirás un proceso de desarrollo habitual dirigido por agentes: partirás de una incidencia para generar una funcionalidad, comprobarás que el código es válido y que la funcionalidad se comporta como se espera y, finalmente, la combinarás correctamente con el proyecto.
 
 > [!NOTE]
-> Utilizarás la misma sesión durante todo el flujo de la funcionalidad. Normalmente usarías sesiones o PR distintas para los diferentes tipos de archivo, pero tomaremos un atajo para centrarnos en los conceptos principales.
+> Utilizarás la misma sesión durante todo el flujo de la funcionalidad. Normalmente usarías sesiones o solicitudes de incorporación de cambios (PR) distintas para los diferentes tipos de archivo, pero tomaremos un atajo para centrarnos en los conceptos principales.
 
 En esta lección:
 
@@ -19,7 +19,7 @@ En esta lección:
 - revisarás el código.
 - validarás manualmente la funcionalidad en un lienzo de navegador.
 
-Mientras continúas con esta funcionalidad, actualizarás las instrucciones del repositorio, personalizarás la habilidad quality-checks existente, añadirás validación mediante MCP, crearás un agente QA y abrirás la PR de la funcionalidad.
+Mientras continúas con esta funcionalidad, actualizarás las instrucciones del repositorio, personalizarás la habilidad quality-checks existente, añadirás validación mediante Model Context Protocol (MCP), crearás un agente de control de calidad (QA) y abrirás la PR de la funcionalidad.
 
 ## Escenario
 
@@ -27,7 +27,7 @@ El catálogo de Tailspin Toys está creciendo y sus visitantes necesitan acotar 
 
 ## Contexto
 
-Introducir agentes de programación con IA en el flujo de desarrollo no cambia los principios fundamentales. De hecho, adquieren aún más importancia. La mayoría de los desarrolladores siguen un flujo similar al siguiente:
+Introducir agentes de programación con inteligencia artificial (IA) en el flujo de desarrollo no cambia los principios fundamentales. De hecho, adquieren aún más importancia. La mayoría de los desarrolladores siguen un flujo similar al siguiente:
 
 1. Abrir una incidencia que detalle lo que debe hacerse.
 2. Crear un plan de lo que debe desarrollarse.
@@ -56,28 +56,31 @@ Empieza en modo Plan, revisa el plan y, después, utiliza Autopilot para impleme
 
 Antes de empezar, confirma que la PR de valoraciones por estrellas está combinada y que tu rama `main` local está actualizada.
 
-1. Selecciona **Issues** y abre **Allow users to filter games by category and publisher**.
+1. En **Sessions**, en la barra lateral, selecciona la carpeta del repositorio Tailspin Toys y, después, **Issues** en la navegación superior del repositorio. Abre **Allow users to filter games by category and publisher**. Es una incidencia existente de la plantilla; no hace falta crear otra.
 2. Selecciona **New session** y elige un **new working tree** basado en la rama `main` actualizada.
 
     ![Vista de una incidencia en la aplicación GitHub Copilot con una flecha que señala el botón New session](../../../_images/app-new-session-from-issue.png)
 
 3. Confirma que la incidencia está adjunta a la sesión y selecciona **Plan** en el selector de modo.
 
+> [!NOTE]
+> Si no se encuentra Node.js o npm, pide al agente que ejecute `node --version` y `npm --version`. Si funcionan en el terminal, pero no en la sesión, comprueba la configuración de `PATH` o del gestor de versiones de la aplicación y ciérrala por completo antes de volver a abrirla. Vuelve a intentar la operación y las comprobaciones que han fallado; no reinstales npm solo porque el agente no lo encuentre.
+
 ## Planificar la funcionalidad de filtrado
 
 La planificación te permite revisar el enfoque antes de que Copilot escriba código. Como has iniciado la sesión desde la incidencia, Copilot ya tiene la solicitud de la funcionalidad como contexto. Envía:
 
 ```plaintext
-Build this feature.
+Desarrolla esta funcionalidad.
 ```
 
 Responde a las preguntas de Copilot y compara el plan con los criterios de aceptación de la incidencia. Comprueba que incluye el filtrado por categoría y editor, controles accesibles, cambios de acceso a datos y pruebas. Aclara cualquier comportamiento poco definido, como la combinación de varias categorías o qué ocurre cuando ningún juego coincide.
 
-El plan debe incluir lint, pruebas unitarias, pruebas E2E y comprobación de tipos con las herramientas existentes del proyecto. Céntralo en implementar y probar el filtrado; crearás la PR después de completar el flujo de calidad. Solicita cambios en el plan antes de aprobarlo y conserva la URL de la incidencia y las aclaraciones acordadas para la validación posterior.
+El plan debe incluir lint, pruebas unitarias, pruebas de extremo a extremo (E2E) y comprobación de tipos con las herramientas existentes del proyecto. Céntralo en implementar y probar el filtrado; crearás la PR después de completar el flujo de calidad. Solicita cambios en el plan antes de aprobarlo y conserva la URL de la incidencia y las aclaraciones acordadas para la validación posterior.
 
 ## Aprobar Autopilot explícitamente
 
-Cuando estés conforme con el plan, selecciona **Approve and implement with autopilot** o la opción equivalente de tu versión. Confirma que el indicador de modo muestra **Autopilot**.
+Cuando estés conforme con el plan, selecciona **Approve and implement this plan** o la opción equivalente de tu versión. Comprueba el modo activo en lugar de dar por hecho que la aprobación lo cambia. Confirma que el indicador de modo muestra **Autopilot**.
 
 Copilot comenzará a implementar la funcionalidad. Verás cómo itera por el proceso, sigue el plan establecido, genera código e incluso ejecuta pruebas.
 
@@ -86,7 +89,7 @@ Copilot comenzará a implementar la funcionalidad. Verás cómo itera por el pro
 
 ## Revisar y verificar la implementación
 
-Una vez generado el código, hay que revisarlo antes de combinarlo, igual que cualquier otro código. Revisemos el código y ejecutemos el sitio para comprobar que todo funciona correctamente.
+Una vez generado el código, hay que revisarlo antes de combinarlo, igual que cualquier otro código. Revisa el código y ejecuta el sitio para comprobar que todo funciona correctamente.
 
 1. Abre **Changes** y examina la implementación del filtrado y las pruebas.
 2. Compara el resultado con la incidencia y las aclaraciones aprobadas, incluidas las combinaciones de varias categorías y editores. Comprueba que los cambios siguen las instrucciones existentes del repositorio.
@@ -97,19 +100,25 @@ Una vez generado el código, hay que revisarlo antes de combinarlo, igual que cu
 
 El código parece correcto, pero ¿se ejecuta? Iniciemos la aplicación como antes y abramos el sitio en un lienzo de navegador.
 
-1. Utiliza la indicación siguiente para pedir a Copilot que inicie la aplicación y abra la página en el lienzo de navegador:
+1. Utiliza este prompt para pedir a Copilot que inicie la aplicación y abra la página en el lienzo de navegador:
 
     ```plaintext
-    Start the app and open it in the browser canvas.
+    Inicia la aplicación y ábrela en el lienzo del navegador.
     ```
 
 2. En unos instantes, la aplicación se iniciará y se abrirá una ventana de navegador dentro de la aplicación Copilot.
-3. Confirma que las tarjetas de juegos valorados muestran su puntuación sobre cinco.
-4. Cuando termines, pide a Copilot que detenga el servidor de desarrollo que ha iniciado para esta sesión con la indicación siguiente:
+3. Selecciona una categoría y confirma que los resultados coinciden. Quita el filtro y, después, selecciona una editorial y comprueba que los resultados corresponden a esa editorial.
+4. Combina filtros de categoría y editorial y compara los resultados con la incidencia y el plan aprobado. Si se admiten varias categorías, comprueba el comportamiento acordado para combinarlas.
+5. Prueba una combinación sin juegos coincidentes y revisa el estado vacío. Borra o restablece los filtros y confirma que vuelve a aparecer la lista completa.
+6. Cuando termines, pide a Copilot que detenga el servidor de desarrollo que ha iniciado para esta sesión:
 
     ```plaintext
-    Stop the dev server and close the browser canvas.
+    Detén el servidor de desarrollo y cierra el lienzo del navegador.
     ```
+
+## Conserva esta sesión para las lecciones siguientes
+
+Todavía no crees ni combines la PR de filtrado. Conserva esta sesión, el árbol de trabajo y la rama para las lecciones 4 a 8. A continuación, aplicarás instrucciones personalizadas al código de filtrado y añadirás las mejoras de la habilidad y de QA antes de crear y combinar la PR conjunta en la lección 8. Después de detener el servidor de desarrollo, puedes dejar la sesión inactiva y volver a ella en la próxima lección.
 
 ## Resumen y pasos siguientes
 
